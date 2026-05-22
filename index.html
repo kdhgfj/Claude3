@@ -321,6 +321,25 @@
   .lemo-buy:hover:not(:disabled) { filter:brightness(1.08); transform:translateY(-1px); }
   .lemo-buy:disabled { opacity:.5; cursor:default; }
   .lemo-boost-banner { padding:10px 14px; border:1px dashed var(--gold); background:rgba(131,95,230,.08); border-radius:10px; margin-top:12px; font-size:.92rem; color:var(--gold-hi); font-weight:600; }
+
+  /* ===== Wall Street Live ===== */
+  .sm-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; margin-top:16px; }
+  .sm-card { position:relative; overflow:hidden; border:2px solid var(--line); border-radius:14px; padding:14px; background:var(--panel); transition:border-color .3s, transform .15s; }
+  .sm-card.flash-up::before, .sm-card.flash-down::before { content:""; position:absolute; inset:0; opacity:0; animation:flashf .9s ease; pointer-events:none; border-radius:14px; }
+  .sm-card.flash-up::before { background:rgba(27,166,114,.22); }
+  .sm-card.flash-down::before { background:rgba(226,86,110,.22); }
+  .sm-card-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .sm-name { font-weight:700; color:var(--text); font-size:1rem; }
+  .sm-price { font-size:1.3rem; font-weight:800; color:var(--gold-hi); font-variant-numeric:tabular-nums; transition:color .2s; }
+  .sm-chart { width:100%; height:54px; background:rgba(255,255,255,.4); border-radius:8px; margin:8px 0; display:block; }
+  .sm-info { display:flex; justify-content:space-between; font-size:.85rem; margin-bottom:10px; align-items:center; }
+  .sm-change { font-weight:700; font-variant-numeric:tabular-nums; }
+  .sm-shares { color:var(--text-dim); font-size:.82rem; }
+  .sm-actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .sm-actions button { padding:9px; font-size:.92rem; }
+  .sm-news { margin-top:12px; padding:10px 14px; background:rgba(131,95,230,.1); border-left:3px solid var(--gold); border-radius:8px; font-size:.95rem; font-weight:600; color:var(--text); }
+  .sm-float { position:absolute; right:14px; top:38px; font-weight:800; font-size:1rem; pointer-events:none; animation:floatUp 1.2s ease forwards; }
+  .sm-float.up { color:var(--green); } .sm-float.down { color:var(--red); }
   .game-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
   .game-head .gt { font-weight: 700; color: var(--gold-hi); }
   .scorechip { font-size: .8rem; padding: 6px 13px; border-radius: 99px; border: 1px solid var(--line); background: rgba(131,95,230,.06); color: var(--gold); }
@@ -571,8 +590,8 @@
       </svg>
 
       <div class="hero-stats">
-        <div class="s"><div class="n">7</div><div class="l">Modules</div></div>
-        <div class="s"><div class="n">7</div><div class="l">Mini-games</div></div>
+        <div class="s"><div class="n">8</div><div class="l">Modules</div></div>
+        <div class="s"><div class="n">8</div><div class="l">Mini-games</div></div>
         <div class="s"><div class="n">35</div><div class="l">Quiz checks</div></div>
         <div class="s"><div class="n">2</div><div class="l">Boss games</div></div>
       </div>
@@ -617,6 +636,18 @@
       <div class="btn-row"><button class="btn primary">▶ Open the Lemonade Stand</button></div>
     </div>
 
+    <div class="final-card reveal" id="stockCard" style="margin-top:14px">
+      <div class="mnum" style="font-size:.72rem;letter-spacing:.16em;color:var(--gold);text-transform:uppercase">Boss Game 3 · LIVE Stock Market</div>
+      <h2>📈 <span class="grad">Wall Street Live</span></h2>
+      <p style="color:var(--text-dim);max-width:580px;line-height:1.8">
+        Real-time animated charts. Breaking news. 5 stocks ticking up and down LIVE. Start with $1,000, buy low, sell high, and react to events as they happen. 60 seconds of pure trading action.</p>
+      <div class="feat">
+        <span>📊 Live charts</span><span>📰 Breaking news</span><span>💰 Buy & sell stocks</span><span>⏱ Real-time action</span><span>🏆 Beat your high score</span>
+      </div>
+      <div id="stockBestLine" style="margin-top:10px;font-size:.86rem;color:var(--gold);min-height:1em"></div>
+      <div class="btn-row"><button class="btn primary">▶ Open the Market</button></div>
+    </div>
+
     <div class="sec-head reveal"><div class="k">Why VAULT</div><h2>Built to actually teach</h2></div>
     <div class="grid reveal">
       <div class="card" style="cursor:default"><div class="ic">🎯</div><h3>Real scenarios</h3><div class="desc">Every example is something a kid has actually lived — birthday money, babysitting cash, sketchy DMs.</div></div>
@@ -646,7 +677,8 @@ const ICONS = {
   bank:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#835fe6" stroke-width="1.5"><path d="M3 9l9-5 9 5M4 9v9m5-9v9m6-9v9m5-9v9M2 21h20"/></svg>`,
   card:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#835fe6" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20M6 15h5"/></svg>`,
   receipt:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#835fe6" stroke-width="1.5"><path d="M5 3v18l2-1.5L9 21l2-1.5L13 21l2-1.5L17 21l2-1.5V3l-2 1.5L15 3l-2 1.5L11 3 9 4.5 7 3 5 4.5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>`,
-  shield:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#835fe6" stroke-width="1.5"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>`
+  shield:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#835fe6" stroke-width="1.5"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>`,
+  stocks:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#835fe6" stroke-width="1.5" stroke-linecap="round"><path d="M4 20V14M9 20V10M14 20V6M19 20V2"/><path d="M2 22h20"/><path d="M19 2l-2 2M19 2l2 2"/></svg>`
 };
 function art(kind){
   const s=`width="92" height="92" viewBox="0 0 24 24" fill="none" stroke="#835fe6" stroke-width="1.2"`;
@@ -657,7 +689,8 @@ function art(kind){
     bank:`<path d="M3 9l9-5 9 5M4 9v9m5-9v9m6-9v9m5-9v9M2 21h20"/>`,
     card:`<rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20M6 15h5"/>`,
     receipt:`<path d="M5 3v18l2-1.5L9 21l2-1.5L13 21l2-1.5L17 21l2-1.5V3l-2 1.5L15 3l-2 1.5L11 3 9 4.5 7 3 5 4.5z"/><path d="M8 8h8M8 12h8M8 16h5"/>`,
-    shield:`<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/>`
+    shield:`<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/>`,
+    stocks:`<path d="M4 20V14M9 20V10M14 20V6M19 20V2" stroke-linecap="round"/><path d="M2 22h20"/><path d="M19 2l-2 2M19 2l2 2"/>`
   })[kind]}</svg>`;
 }
 
@@ -666,7 +699,8 @@ const GAME_INFO = {
   barter:"Barter Market", backpack:"Survival Backpack", budget:"Budget Challenge",
   moneyTree:"Money Tree Tapper", debtEscape:"Debt Escape", tax:"Tax Town", scamChat:"Scam Chat",
   tradeTrek:"Trade Trek", cartRush:"Cart Rush", budgetBoss:"Budget Boss",
-  savingsGarden:"Savings Garden", debtCrusher:"Debt Crusher", cityBuilder:"City Builder", phoneDefender:"Phone Defender"
+  savingsGarden:"Savings Garden", debtCrusher:"Debt Crusher", cityBuilder:"City Builder", phoneDefender:"Phone Defender",
+  buyLowSellHigh:"Buy Low, Sell High"
 };
 
 /* ════════════ MODULES ════════════ */
@@ -961,6 +995,54 @@ const MODULES = [
     {q:"If a stranger online pressures you to pay or share info fast, you should…",a:["Do it quickly before the offer ends","Stop, don't reply, and tell a trusted adult","Send just half"],c:1},
     {q:"A message rushes you and demands payment in gift cards. This is…",a:["Normal and safe","A scam — strange payment plus urgency","A helpful bank service"],c:1}
   ]
+},
+{
+  id:7, icon:ICONS.stocks, art:"stocks", games:["buyLowSellHigh"],
+  title:"Stocks & Shares", desc:"What stocks are, how prices move, and why companies sell pieces of themselves.",
+  grades:"Grades 7–9", time:"6 min", tagline:"Own a tiny piece of a real company.",
+  lesson:`
+  <p class="lead">A stock is a tiny slice of a real company you can own. Buy one share and you're a part-owner — even of giants like Apple or Nike! 📊</p>
+
+  <h3 class="h2sec">📊 What is a stock?</h3>
+  <p>Companies sell tiny pieces of themselves called <b>stocks</b> (or <b>shares</b>) to raise money. Each share = a piece of ownership.</p>
+  <p>If a company has 1 million shares and you own 1, you own one-millionth of the whole company. Cool, right?</p>
+
+  <h3 class="h2sec">📈 Why prices move</h3>
+  <p>Stock prices change all day based on what people THINK the company will do:</p>
+  <ul class="cool-list">
+    <li><b>Good news</b> → people buy → price up 📈</li>
+    <li><b>Bad news</b> → people sell → price down 📉</li>
+    <li><b>Earnings reports</b> — companies update their results 4× a year; the stock pops or drops</li>
+    <li><b>The whole market</b> — sometimes EVERYTHING moves together</li>
+  </ul>
+
+  <h3 class="h2sec">⚖️ Risk vs. reward</h3>
+  <p>Stocks can grow your money FAST — but they can also LOSE it. A savings account is safe but slow. Stocks are riskier but offer bigger growth over time.</p>
+  <p><b>Long view:</b> over 10+ years stocks usually beat savings. Over 1 day? Anything goes.</p>
+
+  <h3 class="h2sec">🥚 Diversification</h3>
+  <p>Never put ALL your money in one stock! If that company tanks, you lose everything.</p>
+  <p>Spread it across many stocks (or use an <b>index fund</b> that owns hundreds of stocks for you). That's called <b>diversification</b> — and it's the #1 rule of investing.</p>
+
+  <h3 class="h2sec">💰 Dividends</h3>
+  <p>Some companies pay you a small amount each quarter just for owning their stock — like a mini paycheck for being an owner. That's a <b>dividend</b>.</p>
+
+  <div class="term-grid">
+    <div class="term"><div class="t">Stock / Share</div><div class="d">A small piece of ownership in a company.</div></div>
+    <div class="term"><div class="t">Dividend</div><div class="d">Cash a company pays its shareholders.</div></div>
+    <div class="term"><div class="t">Diversification</div><div class="d">Spreading money across many investments.</div></div>
+    <div class="term"><div class="t">Index fund</div><div class="d">A bundle that owns hundreds of stocks at once.</div></div>
+  </div>
+
+  <div class="factbox"><div class="fi">📈</div><div class="ft"><b>Did you know?</b> The U.S. stock market has gone UP about <b>10% per year on average</b> over the last 100 years — but it also crashed badly in 1929, 2008, and 2020. <b>Long-term up, short-term wild.</b></div></div>`,
+  example:`Your favorite game company makes a hit new game. People rush to buy the stock and the price climbs. If you owned 5 shares at <b>$50</b> each, they might now be worth <b>$70</b> — you'd be up <b>$100</b>! 📈`,
+  quiz:[
+    {q:"What is a 'stock' or 'share'?",a:["A type of chicken broth","A small piece of ownership in a company","A bank account"],c:1},
+    {q:"Why do stock prices change?",a:["The government decides each day","Based on what people think the company will do","They never actually change"],c:1},
+    {q:"What does 'diversification' mean?",a:["Putting ALL your money in one stock","Spreading your money across many investments","Avoiding stocks completely"],c:1},
+    {q:"What is a dividend?",a:["A cash payment from a company to its shareholders","A type of stock","A scam"],c:0},
+    {q:"Comparing stocks vs. a savings account…",a:["Savings ALWAYS earn more","Stocks are completely safe","Stocks usually grow more over the long term, but with more risk"],c:2}
+  ]
 }
 ];
 
@@ -981,11 +1063,15 @@ let vaultBest = JSON.parse(localStorage.getItem("vaultBestRun") || "null");
 function saveVaultBest(){ localStorage.setItem("vaultBestRun", JSON.stringify(vaultBest)); }
 let lemoBest = JSON.parse(localStorage.getItem("lemoBestRun") || "null");
 function saveLemoBest(){ localStorage.setItem("lemoBestRun", JSON.stringify(lemoBest)); }
+let stockBest = JSON.parse(localStorage.getItem("stockBestRun") || "null");
+function saveStockBest(){ localStorage.setItem("stockBestRun", JSON.stringify(stockBest)); }
 function paintBest(){
   const vbl=document.getElementById("vaultBestLine");
   if(vbl) vbl.textContent = vaultBest ? "🏆 Personal best: $"+vaultBest.nw.toLocaleString()+" · "+vaultBest.rank : "";
   const lbl=document.getElementById("lemoBestLine");
   if(lbl) lbl.textContent = lemoBest ? "🏆 Personal best: $"+lemoBest.cash.toFixed(2)+" · "+lemoBest.rank : "";
+  const sbl=document.getElementById("stockBestLine");
+  if(sbl) sbl.textContent = stockBest ? "🏆 Personal best: $"+stockBest.final.toFixed(2)+" · "+stockBest.rank : "";
 }
 
 /* ════════════ HOME ════════════ */
@@ -1024,6 +1110,7 @@ function renderGrid(){
   });
   document.getElementById("finalCard").onclick = openFinal;
   const lc = document.getElementById("lemoCard"); if(lc) lc.onclick = openLemo;
+  const sc = document.getElementById("stockCard"); if(sc) sc.onclick = openStocks;
   paintBest();
   observeReveals();
 }
@@ -2615,6 +2702,159 @@ const GAMES = {
     document.getElementById("pdAllow").onclick=()=>pick(true);
     document.getElementById("pdBlock").onclick=()=>pick(false);
     show();
+  },
+
+  /* M8 — Buy Low, Sell High (timing game with animated patterns) */
+  buyLowSellHigh(){
+    function makeUp(){ return Array.from({length:25},(_,i)=> 50 + i*1.3 + Math.random()*3 - 1.5); }
+    function makeV(){ return Array.from({length:25},(_,i)=> 50 + (i<12 ? -i*1.6 + Math.random()*2 - 1 : (i-12)*2.2 + Math.random()*2 - 1)); }
+    function makeInvV(){ return Array.from({length:25},(_,i)=> 50 + (i<12 ? i*1.6 + Math.random()*2 - 1 : 18-(i-12)*1.5 + Math.random()*2 - 1)); }
+    function makeCycle(){ return Array.from({length:25},(_,i)=> 50 + Math.sin(i/3)*11 + Math.random()*2 - 1); }
+    function makeVolatile(){ const arr=[55]; for(let i=1;i<25;i++) arr.push(Math.max(20,Math.min(95, arr[i-1] + Math.random()*12 - 5.5))); return arr; }
+    const PATTERNS = [
+      {name:"📈 Steady climb",    prices:makeUp(),       hint:"Trend is up — buy early, sell late."},
+      {name:"🪣 V-shape recovery", prices:makeV(),        hint:"It dips, then recovers. Buy near the bottom!"},
+      {name:"⛰️ Peak (inverted V)", prices:makeInvV(),    hint:"Goes up, then crashes. Sell at the peak!"},
+      {name:"🌊 Cyclical waves",   prices:makeCycle(),    hint:"Wave pattern — buy in valleys, sell on peaks."},
+      {name:"🎢 Wild ride",        prices:makeVolatile(), hint:"Unpredictable — take a profit when you can!"}
+    ];
+    let roundIdx=0, totalGain=0, idx=0, prices=[], history=[], buyPrice=null, buyIdx=null, sellIdx=null, interval=null, over=false;
+
+    gameShell("📈 Buy Low, Sell High","Watch each chart unfold tick by tick. BUY when you see a dip, SELL when you see a peak. 5 patterns — beat the buy-and-hold!",
+      `<div class="stat-tiles">
+         <div class="stat-tile"><div class="sl">Round</div><div class="sv" id="blRnd">1 / 5</div></div>
+         <div class="stat-tile"><div class="sl">This round</div><div class="sv" id="blPct">—</div></div>
+         <div class="stat-tile"><div class="sl">Total return</div><div class="sv" id="blTot" style="color:var(--green)">+0%</div></div>
+       </div>
+       <div style="margin-top:14px;padding:14px;background:var(--panel);border-radius:14px;border:1px solid var(--line)">
+         <div id="blPattern" style="font-size:.92rem;font-weight:700;color:var(--gold-hi);margin-bottom:6px">Pattern: —</div>
+         <svg viewBox="0 0 300 120" id="blChart" style="width:100%;height:170px;display:block;background:rgba(255,255,255,.4);border-radius:8px"></svg>
+         <div style="text-align:center;font-size:.95rem;margin-top:8px;font-weight:600">Current price: <span id="blPrice" style="color:var(--gold-hi)">$0</span></div>
+       </div>
+       <div class="g-btns" style="margin-top:14px">
+         <button class="g-pick a" id="blBuy">💰 BUY now</button>
+         <button class="g-pick b" id="blSell" disabled>💸 SELL now</button>
+       </div>
+       <div class="feedback" id="blFb">Watch the chart — tap BUY when the price looks low!</div>`);
+
+    function drawChart(){
+      const svg = document.getElementById("blChart");
+      if(!svg) return;
+      const min = Math.min(...prices), max = Math.max(...prices);
+      const range = (max-min) || 1;
+      const w=300, h=120;
+      let line="";
+      if(history.length>1){
+        const pts = history.map((v,i)=>{
+          const x = (i/(prices.length-1))*w;
+          const y = h - ((v-min)/range)*h*0.82 - h*0.09;
+          return x.toFixed(1)+","+y.toFixed(1);
+        }).join(" ");
+        line = `<polyline points="${pts}" fill="none" stroke="#835fe6" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+      }
+      let markers = "";
+      if(buyIdx !== null){
+        const v = history[buyIdx];
+        const x = (buyIdx/(prices.length-1))*w;
+        const y = h - ((v-min)/range)*h*0.82 - h*0.09;
+        markers += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6" fill="#1bb574" stroke="#fff" stroke-width="2"/><text x="${(x+9).toFixed(1)}" y="${(y+3).toFixed(1)}" font-size="10" fill="#1bb574" font-weight="700">BUY</text>`;
+      }
+      if(sellIdx !== null){
+        const v = history[sellIdx];
+        const x = (sellIdx/(prices.length-1))*w;
+        const y = h - ((v-min)/range)*h*0.82 - h*0.09;
+        markers += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6" fill="#e2566e" stroke="#fff" stroke-width="2"/><text x="${(x+9).toFixed(1)}" y="${(y+3).toFixed(1)}" font-size="10" fill="#e2566e" font-weight="700">SELL</text>`;
+      }
+      svg.innerHTML = line + markers;
+    }
+
+    function tick(){
+      if(over){ clearInterval(interval); return; }
+      if(!document.getElementById("blChart")){ clearInterval(interval); over=true; return; }
+      if(idx >= prices.length){
+        clearInterval(interval);
+        if(buyPrice !== null && sellIdx === null) finishRound(history[history.length-1]);
+        else if(buyPrice === null) finishRound(null);
+        return;
+      }
+      history.push(prices[idx]);
+      document.getElementById("blPrice").textContent = "$"+prices[idx].toFixed(2);
+      drawChart();
+      idx++;
+    }
+
+    function startRound(){
+      const p = PATTERNS[roundIdx];
+      prices = p.prices; idx=0; history=[]; buyPrice=null; buyIdx=null; sellIdx=null;
+      document.getElementById("blRnd").textContent = (roundIdx+1)+" / 5";
+      document.getElementById("blPattern").textContent = "Pattern: "+p.name;
+      document.getElementById("blFb").className = "feedback";
+      document.getElementById("blFb").textContent = p.hint;
+      document.getElementById("blBuy").disabled = false;
+      document.getElementById("blBuy").textContent = "💰 BUY now";
+      document.getElementById("blSell").disabled = true;
+      document.getElementById("blPct").textContent = "—";
+      document.getElementById("blPct").style.color = "var(--text-dim)";
+      document.getElementById("blPrice").textContent = "$"+prices[0].toFixed(2);
+      drawChart();
+      interval = setInterval(tick, 550);
+    }
+
+    function finishRound(sellPrice){
+      const fb = document.getElementById("blFb");
+      let pct = 0;
+      if(buyPrice === null){
+        fb.className="feedback bad"; fb.textContent="😬 You never bought! 0% this round.";
+      } else {
+        if(sellIdx===null) sellIdx = history.length-1;
+        pct = (sellPrice - buyPrice) / buyPrice * 100;
+        totalGain += pct;
+        drawChart();
+        if(pct >= 10){ fb.className="feedback good"; fb.textContent="💎 +"+pct.toFixed(1)+"% — great timing! Bought $"+buyPrice.toFixed(2)+", sold $"+sellPrice.toFixed(2); confetti(20); }
+        else if(pct > 0){ fb.className="feedback good"; fb.textContent="📈 +"+pct.toFixed(1)+"% profit. Bought $"+buyPrice.toFixed(2)+", sold $"+sellPrice.toFixed(2); }
+        else { fb.className="feedback bad"; fb.textContent="📉 "+pct.toFixed(1)+"% — sold lower than buy. Bought $"+buyPrice.toFixed(2)+", sold $"+sellPrice.toFixed(2); }
+      }
+      const pctEl = document.getElementById("blPct");
+      pctEl.textContent = (pct>=0?"+":"")+pct.toFixed(1)+"%";
+      pctEl.style.color = pct>=0?"var(--green)":"var(--red)";
+      const tEl = document.getElementById("blTot");
+      tEl.textContent = (totalGain>=0?"+":"")+totalGain.toFixed(1)+"%";
+      tEl.style.color = totalGain>=0?"var(--green)":"var(--red)";
+      document.getElementById("blBuy").disabled = true;
+      document.getElementById("blSell").disabled = true;
+      roundIdx++;
+      if(roundIdx >= PATTERNS.length){
+        setTimeout(()=>{
+          over=true;
+          const score = Math.max(0, Math.min(10, Math.round((totalGain+30)/8)));
+          gameWin(score, 10, "Total return across 5 rounds: "+(totalGain>=0?"+":"")+totalGain.toFixed(1)+"%");
+        }, 1800);
+      } else {
+        setTimeout(startRound, 2200);
+      }
+    }
+
+    document.getElementById("blBuy").onclick = ()=>{
+      if(buyPrice !== null || over || history.length === 0) return;
+      buyPrice = history[history.length-1];
+      buyIdx = history.length-1;
+      document.getElementById("blBuy").disabled = true;
+      document.getElementById("blBuy").textContent = "📍 Bought @ $"+buyPrice.toFixed(2);
+      document.getElementById("blSell").disabled = false;
+      const fb = document.getElementById("blFb");
+      fb.className = "feedback good";
+      fb.textContent = "🟢 Bought at $"+buyPrice.toFixed(2)+". Now watch — sell at a peak!";
+      drawChart();
+    };
+    document.getElementById("blSell").onclick = ()=>{
+      if(buyPrice === null || over || sellIdx !== null) return;
+      sellIdx = history.length-1;
+      const sellP = history[sellIdx];
+      clearInterval(interval);
+      finishRound(sellP);
+    };
+
+    startRound();
   }
 };
 
@@ -3455,6 +3695,256 @@ function endLemo(){
   }
   animateNum(document.getElementById("leFSold"), 0, lemo.totalSold, "");
   confetti(stands>=3?120:cash>=100?80:30);
+  window.scrollTo({top:0});
+}
+
+/* ════════════════════════════════════════════════════════════
+   WALL STREET LIVE — boss game 3 (real-time stock-market sim)
+   ════════════════════════════════════════════════════════════ */
+let stock = {};
+const STOCKS_BASE = [
+  {sym:"BUR", name:"🍔 BurgerCo",   price:50,  color:"#ff8fcb", style:"🛡️ Safe & steady",  baseTrend:0.004, vol:0.018, cycle:0,  amp:0},
+  {sym:"GAM", name:"🎮 GameCorp",   price:80,  color:"#835fe6", style:"🎲 Volatile tech",  baseTrend:0,     vol:0.05,  cycle:0,  amp:0},
+  {sym:"PHN", name:"📱 PhoneTech",  price:100, color:"#4f8fff", style:"📈 Growth tech",    baseTrend:0.003, vol:0.04,  cycle:0,  amp:0},
+  {sym:"COF", name:"☕ CoffeeCo",   price:30,  color:"#ff9d57", style:"🌊 Cyclical",       baseTrend:0,     vol:0.022, cycle:10, amp:0.04},
+  {sym:"AUT", name:"🚗 AutoMakers", price:60,  color:"#1bb574", style:"🚙 Steady growth",  baseTrend:0.002, vol:0.03,  cycle:0,  amp:0}
+];
+const NEWS_POOL = [
+  {text:"🎮 GameCorp releases blockbuster game!",       target:"GAM", impact: 0.15},
+  {text:"🎮 GameCorp servers crash — bad press",         target:"GAM", impact:-0.12},
+  {text:"📱 PhoneTech launches new phone — huge demand!",target:"PHN", impact: 0.12},
+  {text:"📱 PhoneTech recall — batteries overheating",   target:"PHN", impact:-0.15},
+  {text:"🍔 BurgerCo viral TikTok menu!",                target:"BUR", impact: 0.10},
+  {text:"🍔 BurgerCo food safety scandal",               target:"BUR", impact:-0.10},
+  {text:"☕ Coffee bean shortage worldwide",              target:"COF", impact:-0.12},
+  {text:"☕ CoffeeCo new flavor takes off!",              target:"COF", impact: 0.10},
+  {text:"🚗 AutoMakers unveils self-driving!",           target:"AUT", impact: 0.15},
+  {text:"🚗 AutoMakers strike halts production",         target:"AUT", impact:-0.10},
+  {text:"📈 Market BOOM — everyone's buying!",           target:"ALL", impact: 0.06},
+  {text:"📉 Market crash — everyone selling!",           target:"ALL", impact:-0.08},
+  {text:"📊 Quiet trading day...",                       target:"NONE",impact: 0}
+];
+
+function openStocks(){
+  stock = {
+    cash: 1000, starting: 1000,
+    stocks: STOCKS_BASE.map(s=>({...s, history:[s.price], shares:0, trend:0, lastChange:0})),
+    tick: 0, maxTicks: 40,
+    over: false, timer: null
+  };
+  document.getElementById("home").style.display="none";
+  document.getElementById("lesson").style.display="block";
+  renderMarket();
+  window.scrollTo({top:0});
+  stock.timer = setInterval(()=>{
+    if(stock.over){ clearInterval(stock.timer); return; }
+    if(!document.getElementById("smPortfolio")){ clearInterval(stock.timer); stock.over=true; return; }
+    tickMarket();
+  }, 1500);
+}
+
+function tickMarket(){
+  stock.tick++;
+  if(Math.random() < 0.4){
+    const ev = NEWS_POOL[Math.floor(Math.random()*NEWS_POOL.length)];
+    if(ev.target === "ALL") stock.stocks.forEach(s=>{ s.trend += ev.impact; });
+    else if(ev.target !== "NONE"){
+      const t = stock.stocks.find(s=>s.sym===ev.target);
+      if(t) t.trend += ev.impact;
+    }
+    const newsEl = document.getElementById("smNews");
+    if(newsEl){
+      newsEl.textContent = ev.text;
+      newsEl.classList.remove("gpop"); void newsEl.offsetWidth; newsEl.classList.add("gpop");
+    }
+  }
+  stock.stocks.forEach(s=>{
+    const noise = (Math.random()-0.5) * (s.vol||0.03) * 2;
+    const cyclic = s.amp ? Math.sin(stock.tick / (s.cycle||1) * 2 * Math.PI) * s.amp : 0;
+    const change = (s.baseTrend||0) + noise + cyclic + s.trend;
+    s.lastChange = change;
+    s.price = Math.max(1, s.price * (1 + change));
+    s.history.push(s.price);
+    if(s.history.length > 30) s.history.shift();
+    s.trend *= 0.65;
+  });
+  updateMarketUI();
+  document.getElementById("smTick").textContent = stock.tick+" / "+stock.maxTicks;
+  if(stock.tick >= stock.maxTicks) endMarket();
+}
+
+function updateMarketUI(){
+  const port = stock.cash + stock.stocks.reduce((a,s)=>a + s.shares*s.price, 0);
+  const portEl = document.getElementById("smPortfolio");
+  if(portEl){
+    portEl.textContent = "$"+port.toFixed(2);
+    portEl.style.color = port >= stock.starting ? "var(--green)" : "var(--red)";
+  }
+  const cashEl = document.getElementById("smCash");
+  if(cashEl) cashEl.textContent = "$"+stock.cash.toFixed(2);
+  stock.stocks.forEach(updateStockCard);
+}
+
+function updateStockCard(s){
+  const card = document.getElementById("smCard-"+s.sym);
+  if(!card) return;
+  card.querySelector(".sm-price").textContent = "$"+s.price.toFixed(2);
+  const ch = card.querySelector(".sm-change");
+  const pct = (s.lastChange*100).toFixed(1);
+  ch.textContent = (s.lastChange >= 0 ? "▲ +" : "▼ ") + Math.abs(pct) + "%";
+  ch.style.color = s.lastChange >= 0 ? "var(--green)" : "var(--red)";
+  card.querySelector(".sm-shares").textContent = "Owned: "+s.shares+" · worth $"+(s.shares*s.price).toFixed(2);
+  const buyBtn = card.querySelector("button[data-buy]");
+  if(buyBtn) buyBtn.disabled = stock.cash < s.price || stock.over;
+  const sellBtn = card.querySelector("button[data-sell]");
+  if(sellBtn) sellBtn.disabled = s.shares <= 0 || stock.over;
+  drawSmChart(card.querySelector(".sm-chart"), s.history, s.color);
+}
+
+function drawSmChart(svg, history, color){
+  if(!svg) return;
+  const w = 240, h = 54;
+  const min = Math.min(...history), max = Math.max(...history);
+  const range = (max-min) || 1;
+  const pts = history.map((v,i)=>{
+    const x = (i/(Math.max(1, history.length-1))) * w;
+    const y = h - ((v-min)/range)*h*0.85 - h*0.075;
+    return x.toFixed(1)+","+y.toFixed(1);
+  }).join(" ");
+  const trend = history.length>=2 && history[history.length-1] >= history[0] ? "up" : "down";
+  const grad = trend==="up" ? "rgba(27,166,114,.25)" : "rgba(226,86,110,.25)";
+  svg.innerHTML = `<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+}
+
+function smBuy(sym){
+  if(stock.over) return;
+  const s = stock.stocks.find(x=>x.sym===sym);
+  if(!s || stock.cash < s.price) return;
+  stock.cash -= s.price;
+  s.shares++;
+  smFloatLabel(sym, "-$"+s.price.toFixed(0), false);
+  updateMarketUI();
+  const card = document.getElementById("smCard-"+sym);
+  if(card) burst(card, true);
+}
+function smSell(sym){
+  if(stock.over) return;
+  const s = stock.stocks.find(x=>x.sym===sym);
+  if(!s || s.shares<=0) return;
+  stock.cash += s.price;
+  s.shares--;
+  smFloatLabel(sym, "+$"+s.price.toFixed(0), true);
+  updateMarketUI();
+}
+function smFloatLabel(sym, text, good){
+  const card = document.getElementById("smCard-"+sym);
+  if(!card) return;
+  const f = document.createElement("div");
+  f.className = "sm-float "+(good?"up":"down");
+  f.textContent = text;
+  card.appendChild(f);
+  setTimeout(()=>f.remove(), 1300);
+}
+
+function renderMarket(){
+  const stocksHTML = stock.stocks.map(s=>`
+    <div class="sm-card" id="smCard-${s.sym}" style="border-color:${s.color}">
+      <div class="sm-card-head">
+        <div>
+          <div class="sm-name">${s.name}</div>
+          <div style="font-size:.72rem;color:var(--text-dim);margin-top:2px">${s.style||""}</div>
+        </div>
+        <div class="sm-price">$${s.price.toFixed(2)}</div>
+      </div>
+      <svg class="sm-chart" viewBox="0 0 240 54" preserveAspectRatio="none"></svg>
+      <div class="sm-info">
+        <div class="sm-change" style="color:var(--text-dim)">— —</div>
+        <div class="sm-shares">Owned: 0 · worth $0.00</div>
+      </div>
+      <div class="sm-actions">
+        <button class="btn primary" data-buy="${s.sym}">💰 Buy 1</button>
+        <button class="btn" data-sell="${s.sym}" disabled>💸 Sell 1</button>
+      </div>
+    </div>`).join("");
+  document.getElementById("lesson").innerHTML = `
+   <div class="vc-stage">
+    <div class="back" onclick="quitMarket()">← Quit market</div>
+    <div class="lesson-hero">
+      <div class="art">${art("chart")}</div>
+      <div>
+        <div class="mnum">Boss Game 3 · LIVE Trading</div>
+        <h1>📈 Wall Street Live</h1>
+        <div class="tagline">40 ticks · Buy low, sell high · Watch the news</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="vc-dash">
+        <div class="vc-stat"><div class="si">💼</div><div class="sl">Portfolio</div><div class="sv" id="smPortfolio" style="color:var(--gold-hi)">$1000.00</div></div>
+        <div class="vc-stat"><div class="si">💵</div><div class="sl">Cash</div><div class="sv" id="smCash">$1000.00</div></div>
+        <div class="vc-stat"><div class="si">⏱️</div><div class="sl">Tick</div><div class="sv" id="smTick">0 / 40</div></div>
+      </div>
+      <div class="sm-news" id="smNews">📊 Market opens! Buy low, sell high — react fast to news.</div>
+    </div>
+    <div class="sm-grid">${stocksHTML}</div>
+   </div>`;
+  document.querySelectorAll("[data-buy]").forEach(b=>{ b.onclick = ()=>smBuy(b.dataset.buy); });
+  document.querySelectorAll("[data-sell]").forEach(b=>{ b.onclick = ()=>smSell(b.dataset.sell); });
+  updateMarketUI();
+}
+
+function quitMarket(){
+  if(stock.timer){ clearInterval(stock.timer); stock.timer = null; }
+  stock.over = true;
+  goHome();
+}
+
+function endMarket(){
+  stock.over = true;
+  if(stock.timer){ clearInterval(stock.timer); stock.timer = null; }
+  const holdingsValue = stock.stocks.reduce((a,s)=>a + s.shares*s.price, 0);
+  const final = stock.cash + holdingsValue;
+  const gain = final - stock.starting;
+  const gainPct = (gain/stock.starting)*100;
+  let rank, tip;
+  if(gainPct >= 50){      rank="👑 WALL STREET LEGEND"; tip="50%+ return! You read the market like a pro."; }
+  else if(gainPct >= 25){ rank="💎 Smart Investor";    tip="Excellent — you crushed the market."; }
+  else if(gainPct >= 5){  rank="🌱 Steady Trader";     tip="Solid gains! Buy low, sell high pays off."; }
+  else if(gainPct >= -10){rank="📊 Survived";          tip="About break-even — markets are tricky!"; }
+  else {                  rank="📉 Burned";            tip="Ouch! Try buying when prices DIP, not after they spike."; }
+  if(!stockBest || final > stockBest.final){ stockBest = {final:Math.round(final*100)/100, rank}; saveStockBest(); }
+  document.getElementById("lesson").innerHTML = `
+   <div class="vc-stage">
+    <div class="back" onclick="goHome()">← Back to modules</div>
+    <div class="cert pop">
+      <div class="seal">${rank.split(" ")[0]}</div>
+      <h2>Market Closed!</h2>
+      <p style="color:var(--text-dim)">You traded for ${stock.maxTicks} ticks. Final scorecard:</p>
+      <div class="vc-dash" style="margin:20px 0">
+        <div class="vc-stat"><div class="si">💵</div><div class="sl">Cash</div><div class="sv">$${stock.cash.toFixed(2)}</div></div>
+        <div class="vc-stat"><div class="si">📈</div><div class="sl">Holdings</div><div class="sv">$${holdingsValue.toFixed(2)}</div></div>
+        <div class="vc-stat"><div class="si">💼</div><div class="sl">Final value</div><div class="sv" style="color:var(--gold-hi)" id="smFinal">$0.00</div></div>
+        <div class="vc-stat"><div class="si">${gain>=0?"📈":"📉"}</div><div class="sl">Profit</div><div class="sv" style="color:${gain>=0?'var(--green)':'var(--red)'}">${gain>=0?"+":""}$${gain.toFixed(2)} (${gainPct.toFixed(1)}%)</div></div>
+      </div>
+      <h2 class="grad" style="margin-top:6px">${rank}</h2>
+      <p style="color:var(--text-dim);max-width:540px;margin:10px auto 0;line-height:1.8">${tip}</p>
+      <p style="color:var(--gold);margin-top:14px;font-size:.92rem">🏆 Personal best: $${stockBest.final.toFixed(2)} · ${stockBest.rank}</p>
+      <div class="btn-row" style="justify-content:center;margin-top:24px">
+        <button class="vc-bigbtn" style="max-width:220px" onclick="openStocks()">🔁 Play Again</button>
+        <button class="btn" onclick="goHome()">All modules</button>
+      </div>
+    </div>
+   </div>`;
+  const fc = document.getElementById("smFinal");
+  if(fc){
+    const dur=1000, t0=performance.now();
+    (function step(now){
+      if(!document.body.contains(fc)) return;
+      const p=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-p,3);
+      fc.textContent = "$"+(final*e).toFixed(2);
+      if(p<1) requestAnimationFrame(step);
+    })(performance.now());
+  }
+  if(gain > 0) confetti(gainPct >= 25 ? 100 : 40);
   window.scrollTo({top:0});
 }
 
